@@ -1,35 +1,23 @@
 import streamlit as st
 import spacy
-import os
-import subprocess
-import sys
+from spacy import displacy
 
-# Модельді автоматты түрде жүктеу функциясы
+# Модельді жүктеу (ол requirements арқылы алдын ала орнатылады)
 @st.cache_resource
 def load_model():
-    model_name = "en_core_web_sm"
-    try:
-        return spacy.load(model_name)
-    except OSError:
-        # Егер модель табылмаса, оны жүктейміз
-        subprocess.check_call([sys.executable, "-m", "spacy", "download", model_name])
-        return spacy.load(model_name)
+    return spacy.load("en_core_web_sm")
 
-# Модельді іске қосу
 nlp = load_model()
 
-# Сайттың интерфейсі
+# Интерфейс
 st.title("🦷 Стоматологиялық NLP Анализатор")
-st.write("Медициналық есептерді талдауға арналған ИИ жүйесі")
+st.write("Медициналық есептердегі нысандарды тану")
 
-# Мәтін енгізу өрісі
-user_input = st.text_area("Мәтінді осы жерге жазыңыз (ағылшынша):", 
+user_input = st.text_area("Мәтінді енгізіңіз (ағылшынша):", 
                          "Patient A.K. has deep caries on tooth 3.6. Treatment: filling.")
 
 if st.button("Талдау"):
     doc = nlp(user_input)
-    
-    # Нәтижені түрлі-түсті белгілермен көрсету
-    from spacy import displacy
+    # Нәтижені визуализациялау
     html = displacy.render(doc, style="ent")
     st.write(html, unsafe_allow_html=True)
