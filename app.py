@@ -5,7 +5,8 @@ from spacy import displacy
 # Модельді жүктеу (ол requirements арқылы алдын ала орнатылады)
 @st.cache_resource
 def load_model():
-    return spacy.load("en_core_web_sm")
+# Вместо просто spacy.load
+return spacy.load("en_core_web_sm")
 
 nlp = load_model()
 
@@ -21,3 +22,4 @@ if st.button("Талдау"):
     # Нәтижені визуализациялау
     html = displacy.render(doc, style="ent")
     st.write(html, unsafe_allow_html=True)
+
